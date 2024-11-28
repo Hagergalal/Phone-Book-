@@ -1,0 +1,137 @@
+NAME = "Hager Galal Ahmed"
+
+ID = "1110164309"
+
+import sys, os
+GRADING_MODE = False 
+
+if GRADING_MODE:
+    sys.stdin = open('input.txt', 'r')
+
+def init():
+    s = "s ahmed ali, 01002271982\nmahmoud samir, 01119237865\nhend ibrahim, 01583637653\nmalak sami, 01112223333\nmalak mostafa, 01212223442\n"
+    with open("pinputhonebook.txt", "w") as f:
+        f.write(s)
+
+
+# colors 
+# https://sentry.io/answers/print-colored-text-to-terminal-with-python/
+RED = '\033[31m'
+RESET = '\033[0m' # called to return to standard terminal text color
+def red_font(s):
+    return RED + str(s) + RESET
+
+def help():
+    print(f"Press {red_font('e')} to exit")
+    print(f"Press {red_font('a')} to add a contact")
+    print(f"Press {red_font('d')} to delete a contact")
+    print(f"Press {red_font('s')} to save data to file")
+    print(f"Press {red_font('l')} to load data from file")  
+    print(f"Press {red_font('v')} to view all your contacts")
+    print(f"Press {red_font('f')} to find the phone number of a given name")
+    print(f"Press {red_font('u')} to update the phone number of a given name")
+    print(f"Press {red_font('h')} to show help message")
+
+def welcome():
+    message = f"Welcome to {red_font(NAME)}'s phonebook app"
+    n = len(message) - len(NAME)
+    print("-"*n)
+    print(message)
+    print("-"*n)
+    help()
+
+def main():
+    if GRADING_MODE:
+        init()
+        
+    # empty phonebook
+    phonebook = {}
+def load(phonebook):
+    phonebook = {}
+    try:
+        with open("phonebook.txt", 'r') as file:
+            for line in file:
+                name, number = line.strip().split(',')
+                phonebook[name] = number
+    except FileNotFoundError:
+        print(f"Error: The file {phonebook.txt} does not exist.")
+    return phonebook
+
+def save(phonebook):
+    with open("phonebook.txt", 'w') as file:
+        for name, number in phonebook.items():
+            file.write(f"{name},{number}\n")
+            
+def add(phonebook):
+    name = input("Enter the name: ")
+    number = input("Enter the number: ")
+    phonebook[name] = number
+    print(f"Added {name} with number {number}.")
+    
+def update(phonebook):
+      name = input("Enter the name: ")
+      if name in phonebook:
+        number = input("Enter the new number: ")
+        phonebook[name] = number
+        print(f"Updated {name}'s number to {number}.")
+      else:
+        print(f"{name} not found. Adding new contact.")
+        add(phonebook)
+
+
+def find(phonebook):
+    name = input("Enter the name: ")
+    if name in phonebook:
+        print(f"The number for {name} is {phonebook[name]}.")
+    else:
+        print(f"{name} not found in the phonebook.")
+
+
+def delete(phonebook):
+    name = input("Enter the name to delete: ")
+    if name in phonebook:
+        del phonebook[name]
+        print(f"Deleted {name} from the phonebook.")
+    else:
+        print(f"{name} not found in the phonebook.")
+
+
+def view(phonebook):
+    if phonebook:
+        for name, number in phonebook.items():
+            print(f"Name: {name}, Number: {number}")
+    else:
+        print("Phonebook is empty.")
+
+
+def main():
+    global phonebook
+filename = "phonebook.txt"
+phonebook = load("phonebook.txt")
+
+welcome()
+while True:
+        choice = input("> ").lower()
+        if choice == "e":
+            exit()
+        elif choice == "l":
+            phonebook = load("phonebook.txt")
+        elif choice == "s":
+            save(phonebook)
+        elif choice == "a":
+            add(phonebook)
+        elif choice == "f":
+            find(phonebook)
+        elif choice == "u":
+            update(phonebook)
+        elif choice == "d":
+            delete(phonebook)
+        elif choice == "v":
+            view(phonebook)
+        elif choice == "h":
+            help()
+        else:
+            print("invalid input.")
+            help()
+if __name__ == "__main__":
+    main()
